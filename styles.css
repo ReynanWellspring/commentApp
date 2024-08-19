@@ -1,0 +1,135 @@
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f7f9fc;
+  margin: 0;
+  padding: 20px;
+  color: #333;
+}
+
+h2 {
+  text-align: center;
+  color: #4CAF50;
+  font-size: 2.5em;
+  margin-bottom: 30px;
+  font-weight: 700;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  overflow-x: auto; /* Handles table overflow */
+}
+
+.table-wrapper {
+  overflow-x: auto; /* Enable horizontal scroll if needed */
+}
+
+table {
+  width: 100%;
+  min-width: 100%; /* Ensures table takes up full width */
+  border-collapse: collapse;
+  margin-bottom: 25px;
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+th, td {
+  text-align: left;
+  padding: 16px;
+  border-bottom: 1px solid #ddd;
+  font-size: 1em;
+  vertical-align: middle;
+}
+
+th {
+  background-color: #17a2b8;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+td select, td input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.9em;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 25px;
+}
+
+textarea {
+  padding: 15px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  resize: none;
+  font-size: 1em;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+#addNameBtn {
+  padding: 15px 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  font-size: 1.1em;
+  font-weight: 600;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+#addNameBtn:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  th, td {
+    font-size: 0.9em;
+    padding: 12px;
+  }
+
+  .input-group {
+    flex-direction: column;
+  }
+
+  textarea {
+    margin-bottom: 15px;
+  }
+
+  #addNameBtn {
+    padding: 12px 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+  }
+
+  th, td {
+    font-size: 0.85em;
+    padding: 10px;
+  }
+
+  #addNameBtn {
+    padding: 10px 15px;
+    font-size: 1em;
+  }
+}
