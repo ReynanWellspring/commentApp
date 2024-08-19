@@ -49,11 +49,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Function to update the summary whenever any input changes
             const updateSummary = () => {
-              let summary = `${name}: ` + selectedComments.map(e => e.value || e.textContent).join(', ');
-              if (summary.length > 100) {
-                summary = summary.substring(0, 97) + '...';
+              let fullSummary = `${name} ` + selectedComments.map(e => e.value || e.textContent).join(', ');
+              let displaySummary = fullSummary;
+
+              if (fullSummary.length > 100) {
+                displaySummary = fullSummary.substring(0, 97) + '...';
               }
-              summaryCell.textContent = summary;
+
+              summaryCell.textContent = displaySummary;
+              summaryCell.dataset.fullSummary = fullSummary; // Store full summary in data attribute
             };
 
             // Attach the event listener to each element to update the summary on change
@@ -71,4 +75,29 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     })
     .catch(error => console.error('Error fetching data:', error));
+
+  // Function to download the summary data as Excel
+  document.getElementById('downloadBtn').addEventListener('click', function() {
+    const table = document.getElementById('commentTable');
+    const summaries = [];
+
+    // Collect summary data from the table
+    for (let i = 1, row; row = table.rows[i]; i++) {
+      const name = row.cells[0].textContent;
+      const summary = row.cells[7].dataset.fullSummary || row.cells[7].textContent; // Use full summary for export
+      if (summary) {
+        summaries.push([name, summary]);
+      }
+    }
+
+    // Convert summaries into a worksheet
+    const worksheet = XLSX.utils.aoa_to_sheet([['Name', 'Summary'], ...summaries]);
+
+    // Create a new workbook and add the worksheet
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Summaries');
+
+    // Export the workbook as an Excel file
+    XLSX.writeFile(workbook, 'Teacher_Comments_Summary.xlsx');
+  });
 });
