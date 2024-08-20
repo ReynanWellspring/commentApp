@@ -1,26 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Teachers Comment</title>
-  <link rel="stylesheet" href="styles.css">
+  <base target="_top">
+  <link rel="stylesheet" type="text/css" href="styles.css"> <!-- Link to the external CSS file -->
+  <script src="https://cdn.sheetjs.com/xlsx-0.19.1/package/dist/xlsx.full.min.js"></script>
 </head>
 <body>
-
   <div class="container">
-    <h2>Teachers Comments</h2>
+    <h2>Student Comment System</h2>
+    <form>
+      <div class="form-group">
+        <label for="gradeSelect">Select Grade:</label>
+        <select id="gradeSelect">
+          <option value="Sheet1">Grade 1</option>
+          <option value="Sheet2">Grade 2</option>
+          <option value="Sheet3">Grade 3</option>
+          <option value="Sheet4">Grade 4</option>
+          <option value="Sheet5">Grade 5</option>
+        </select>
+      </div>
 
-    <div class="input-group">
-      <textarea id="nameInput" placeholder="Enter names (one per line)" rows="5"></textarea>
-      <button id="addNameBtn">Add Names</button>
-    </div>
+      <div class="form-group">
+        <label for="nameInput">Enter Names:</label>
+        <textarea id="nameInput" rows="4" cols="50"></textarea>
+        <button type="button" id="addNameBtn">Add Names</button>
+      </div>
+    </form>
 
     <div class="table-wrapper">
-      <table id="commentTable">
+      <table id="commentTable" border="1">
         <thead>
           <tr>
             <th>Name</th>
+            <th>Gender</th>
             <th>Introduction</th>
             <th>Behavior</th>
             <th>Classwork</th>
@@ -34,13 +46,12 @@
         </tbody>
       </table>
     </div>
-
-    <button id="downloadBtn">Download Summary as Excel</button>
-
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <div class="button-wrapper">
+    <button type="button" id="downloadBtn">Download Summary</button>
+  </div>
+  
   <script src="script.js"></script>
-
 </body>
 </html>
