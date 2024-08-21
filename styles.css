@@ -21,9 +21,9 @@ h2 {
 }
 
 .container {
-  width: 95%; /* Wider container for more space */
-  max-width: 1400px; /* Increased max-width */
-  padding: 20px; /* Slightly reduced padding */
+  width: 95%;
+  max-width: 1400px;
+  padding: 20px;
   background-color: #ffffff;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
@@ -37,7 +37,7 @@ h2 {
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 20px; /* Slightly reduced margin */
+  margin-bottom: 20px;
   background-color: #fff;
   border-radius: 8px;
   overflow: hidden;
@@ -46,9 +46,9 @@ table {
 
 th, td {
   text-align: left;
-  padding: 12px; /* Reduced padding */
+  padding: 12px;
   border-bottom: 1px solid #ddd;
-  font-size: 0.9em; /* Smaller font size */
+  font-size: 0.9em;
   vertical-align: middle;
 }
 
@@ -66,10 +66,10 @@ td {
 
 td select, td input[type="text"] {
   width: 100%;
-  padding: 8px; /* Smaller padding */
+  padding: 8px;
   border: 1px solid #ccc;
   border-radius: 6px;
-  font-size: 0.85em; /* Smaller font size */
+  font-size: 0.85em;
   box-sizing: border-box;
   margin: 0;
   background-color: #f8f9fa;
@@ -79,6 +79,7 @@ td select, td input[type="text"] {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
+  gap: 15px;
 }
 
 textarea {
@@ -89,18 +90,18 @@ textarea {
   resize: none;
   font-size: 0.9em;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-  flex-grow: 1; /* Makes the textarea take up remaining space */
+  flex-grow: 1;
 }
 
 #addNameBtn {
-  padding: 10px 15px; /* Smaller padding */
+  padding: 10px 15px;
   background-color: #28a745;
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.1s ease;
-  font-size: 0.9em; /* Smaller font size */
+  font-size: 0.9em;
   font-weight: 600;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
@@ -110,16 +111,8 @@ textarea {
   transform: translateY(-2px);
 }
 
-.button-wrapper {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  margin-top: 20px; /* Added margin to the top for spacing */
-}
-
-#downloadBtn {
+#downloadBtn, #createNewBtn {
   padding: 10px 20px;
-  background-color: #007bff;
   color: white;
   border: none;
   border-radius: 8px;
@@ -130,9 +123,26 @@ textarea {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
+#downloadBtn {
+  background-color: #007bff;
+}
+
 #downloadBtn:hover {
   background-color: #0056b3;
   transform: translateY(-2px);
+}
+
+#createNewBtn {
+  background-color: #f39c12; /* Orange color */
+}
+
+#createNewBtn:hover {
+  background-color: #e67e22;
+  transform: translateY(-2px);
+}
+
+.summary-column {
+  font-size: 0.85em;
 }
 
 @media (max-width: 768px) {
@@ -155,6 +165,7 @@ textarea {
   .form-group {
     flex-direction: column;
     align-items: stretch;
+    gap: 10px;
   }
 }
 
@@ -169,7 +180,7 @@ textarea {
     padding: 8px;
   }
 
-  #addNameBtn, #downloadBtn {
+  #addNameBtn, #downloadBtn, #createNewBtn {
     padding: 8px 12px;
     font-size: 0.85em;
   }
