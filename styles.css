@@ -2,10 +2,10 @@ body {
   font-family: 'Arial', sans-serif;
   background-color: #f0f2f5;
   margin: 0;
-  padding: 0;
+  padding-top: 20px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
   min-height: 100vh;
   color: #333;
@@ -28,6 +28,7 @@ h2 {
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
   overflow-x: auto;
+  
 }
 
 .table-wrapper {
@@ -147,7 +148,7 @@ textarea {
 
 @media (max-width: 768px) {
   th, td {
-    font-size: 0.85em;
+    font-size: 0.65em;
     padding: 10px;
   }
 
