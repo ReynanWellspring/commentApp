@@ -28,92 +28,25 @@ h2 {
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
   overflow-x: auto;
-  
-}
-
-.table-wrapper {
-  overflow-x: auto;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-}
-
-th, td {
-  text-align: left;
-  padding: 12px;
-  border-bottom: 1px solid #ddd;
-  font-size: 0.9em;
-  vertical-align: middle;
-}
-
-th {
-  background-color: #007bff;
-  color: white;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 600;
-}
-
-td {
-  padding: 10px 12px;
-}
-
-td select, td input[type="text"] {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 0.85em;
-  box-sizing: border-box;
-  margin: 0;
-  background-color: #f8f9fa;
 }
 
 .form-group {
   display: flex;
   align-items: center;
+  justify-content: center; /* Center the select elements and Go button */
   margin-bottom: 20px;
-  gap: 15px;
+  gap: 10px;
 }
 
-textarea {
-  padding: 10px;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  margin-right: 10px;
-  resize: none;
-  font-size: 0.9em;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-  flex-grow: 1;
-}
-
-#addNameBtn {
-  padding: 10px 15px;
-  background-color: #28a745;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.1s ease;
-  font-size: 0.9em;
-  font-weight: 600;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-#addNameBtn:hover {
-  background-color: #218838;
-  transform: translateY(-2px);
+.buttons-group {
+  display: flex;
+  justify-content: center; /* Center the buttons */
+  gap: 10px; /* Add gap between the buttons */
+  margin-top: 10px;
 }
 
 #downloadBtn, #createNewBtn {
-  padding: 10px 20px;
+  padding: 8px 16px; /* Maintain padding */
   color: white;
   border: none;
   border-radius: 8px;
@@ -142,8 +75,96 @@ textarea {
   transform: translateY(-2px);
 }
 
-.summary-column {
+#goBtn {
+  padding: 6px 12px; /* Reduced padding */
+  background-color: #28a745; /* Green color */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  font-size: 1em;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+#goBtn:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+th, td {
+  text-align: center; /* Center align the text */
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  font-size: 0.9em;
+  vertical-align: middle;
+}
+
+th {
+  background-color: #007bff;
+  color: white;
+  text-transform: uppercase;  
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+td {
+  padding: 8px 10px;
+}
+
+td input[type="text"] {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
   font-size: 0.85em;
+  box-sizing: border-box;
+  background-color: #f8f9fa;
+  text-align: center; /* Center-align text in Gender input */
+}
+
+td select {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.85em;
+  box-sizing: border-box;
+  background-color: #f8f9fa;
+}
+
+td:nth-child(2) {
+  width: 8%; /* Reduce the width of Gender column */
+}
+
+td:nth-child(8) {
+  width: 10%; /* Reduce the width of Additional Comments column */
+}
+
+td:nth-child(1) {
+  font-size: 0.75em; /* Smaller font size for student names */
+}
+
+.summary-column {
+  width: 18%; /* Adjust the width of Summary column */
+  font-size: 0.90em; /* Smaller font size for Summary content */
+  text-align: center; /* Align text to the left in Summary column */
+  padding: 10px; /* Add padding for better readability */
 }
 
 @media (max-width: 768px) {
@@ -152,21 +173,15 @@ textarea {
     padding: 10px;
   }
 
-  textarea {
-    margin-bottom: 10px;
-    margin-right: 0;
-    flex-grow: 1;
-  }
-
-  #addNameBtn {
-    padding: 8px 12px;
-    font-size: 0.85em;
-  }
-
   .form-group {
     flex-direction: column;
     align-items: stretch;
     gap: 10px;
+  }
+
+  .buttons-group {
+    justify-content: center;
+    margin-top: 10px; /* Ensure spacing between the selects and buttons on small screens */
   }
 }
 
@@ -181,7 +196,7 @@ textarea {
     padding: 8px;
   }
 
-  #addNameBtn, #downloadBtn, #createNewBtn {
+  #downloadBtn, #createNewBtn, #goBtn {
     padding: 8px 12px;
     font-size: 0.85em;
   }

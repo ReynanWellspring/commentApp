@@ -14,6 +14,7 @@
       <div class="form-group">
         <label for="gradeSelect">Select Grade:</label>
         <select id="gradeSelect">
+          <option value=""></option>
           <option value="Sheet1">Grade 1</option>
           <option value="Sheet2">Grade 2</option>
           <option value="Sheet3">Grade 3</option>
@@ -23,25 +24,25 @@
 
         <label for="classSelect">Select Class:</label>
         <select id="classSelect">
-          <!-- Options will be populated based on selected grade -->
+          <!-- Initial empty options -->
+          <option value="" disabled selected>Select a grade first</option>
         </select>
+
+        <button type="button" id="goBtn" disabled>Go</button>
 
         <label for="subjectSelect">Select Subject:</label>
         <select id="subjectSelect">
+          <option value=""></option>
           <option value="ICTSheet">ICT</option>
           <option value="MathSheet">Math</option>
           <option value="ScienceSheet">Science</option>
           <option value="EnglishSheet">English</option>
         </select>
-
-        <button type="button" id="downloadBtn">Download Summary</button>
-        <button type="button" id="createNewBtn">Create New</button>
       </div>
 
-      <div class="form-group">
-        <label for="nameInput">Enter Names:</label>
-        <textarea id="nameInput" rows="4" cols="50"></textarea>
-        <button type="button" id="addNameBtn">Add Names</button>
+      <div class="buttons-group">
+        <button type="button" id="downloadBtn">Download</button>
+        <button type="button" id="createNewBtn">Create New</button>
       </div>
     </form>
 
