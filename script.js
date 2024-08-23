@@ -20,18 +20,23 @@ document.addEventListener('DOMContentLoaded', function () {
     'Sheet5': ['','5A1', '5A2', '5A3', '5A4', '5A5', '5A6']   // Grade 5
   };
 
-  // Fetch all data in one call and store it locally
-  const fetchData = async () => {
-    if (!localStorage.getItem('sheetData')) {
-      const url = `${sheetUrls[selectedSubject]}?sheet=${selectedSheet}`;
-      const response = await fetch(url);
-      const data = await response.json();
-      localStorage.setItem('sheetData', JSON.stringify(data));
-      sheetData = data;
-    } else {
-      sheetData = JSON.parse(localStorage.getItem('sheetData'));
-    }
-    populateDropdowns();
+  const fetchClassData = (className) => {
+    const url = `${classDataUrl}?sheet=${className}`;
+    return fetch(url)
+      .then(response => response.json())
+      .catch(error => console.error('Error fetching class data:', error));
+  };
+
+  const fetchData = () => {
+    const url = sheetUrls[selectedSubject] + '?sheet=' + selectedSheet;
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        sheetData = data;
+        localStorage.setItem('sheetData', JSON.stringify(sheetData)); // Save data to localStorage
+        populateDropdowns();
+      })
+      .catch(error => console.error('Error fetching data:', error));
   };
 
   const updateClassDropdown = (grade) => {
@@ -40,14 +45,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Populate class options based on the selected grade
     const classes = classOptions[grade] || [];
-    const fragment = document.createDocumentFragment();
     classes.forEach(className => {
       const option = document.createElement('option');
       option.value = className;
       option.textContent = className;
-      fragment.appendChild(option);
+      classSelect.appendChild(option);
     });
-    classSelect.appendChild(fragment);
     
     // Enable the class dropdown after classes are populated
     classSelect.disabled = false;
@@ -61,28 +64,16 @@ document.addEventListener('DOMContentLoaded', function () {
       if (data && Array.isArray(data)) {
         const dropdowns = document.querySelectorAll(`select[data-category="${category}"]`);
         dropdowns.forEach(dropdown => {
-          const fragmentDropdown = document.createDocumentFragment();
+          dropdown.innerHTML = ''; 
           data.forEach(item => {
             const option = document.createElement('option');
             option.value = item;
             option.textContent = item;
-            fragmentDropdown.appendChild(option);
+            dropdown.appendChild(option);
           });
-          dropdown.innerHTML = '';
-          dropdown.appendChild(fragmentDropdown);
         });
       }
     });
-  };
-
-  const debounce = (func, delay) => {
-    let debounceTimer;
-    return function () {
-      const context = this;
-      const args = arguments;
-      clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(() => func.apply(context, args), delay);
-    };
   };
 
   const applyGenderPronouns = (text, gender) => {
@@ -116,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function () {
     return decodedSummary;
   };
 
-  const updateSummary = (name, genderInput, selectedComments, summaryDiv) => {
+  const updateSummary = (name, genderInput, selectedComments, summaryCell) => {
     let gender = genderInput.value.trim().toLowerCase();
     let summaryGenerated = false;
 
@@ -140,12 +131,12 @@ document.addEventListener('DOMContentLoaded', function () {
     fullSummary = cleanUpSummary(fullSummary);
 
     if (summaryGenerated) {
-      summaryDiv.textContent = fullSummary;
+      summaryCell.textContent = fullSummary;
     } else {
-      summaryDiv.textContent = ''; 
+      summaryCell.textContent = ''; 
     }
 
-    summaryDiv.dataset.fullSummary = fullSummary;
+    summaryCell.dataset.fullSummary = fullSummary;
 
     saveTableData();
   };
@@ -260,18 +251,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
   loadTableData();
 
-  document.getElementById('gradeSelect').addEventListener('change', debounce(function () {
+  document.getElementById('gradeSelect').addEventListener('change', function () {
     selectedSheet = this.value;
     localStorage.setItem('selectedSheet', selectedSheet);
     fetchData();
     updateClassDropdown(selectedSheet);
-  }, 300));
+  });
 
-  document.getElementById('subjectSelect').addEventListener('change', debounce(function () {
+  document.getElementById('subjectSelect').addEventListener('change', function () {
     selectedSubject = this.value;
     localStorage.setItem('selectedSubject', selectedSubject);
     fetchData();
-  }, 300));
+  });
 
   document.getElementById('downloadBtn').addEventListener('click', function() {
     const table = document.getElementById('commentTable');
