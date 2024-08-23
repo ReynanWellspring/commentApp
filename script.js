@@ -6,18 +6,18 @@ document.addEventListener('DOMContentLoaded', function () {
     'ICTSheet': 'https://script.google.com/macros/s/AKfycbzaMRyBSWO8e1pRcSryCLMNyqCI9fQhfpqu1m14XTCBZRnx-wDPcdyljHPdfNZ5iNGg/exec',
   };
 
-  const classDataUrl = 'https://script.google.com/macros/s/AKfycbyQf9QiwTGFSsKIhNhOMXB15FJyBTO_r_ppkRl6vGNqerIt_rId-_ji6ngnDNfI_FqPTg/exec';  // New Web App URL for class data
+  const classDataUrl = 'https://script.google.com/macros/s/AKfycbyQf9QiwTGFSsKIhNhOMXB15FJyBTO_r_ppkRl6vGNqerIt_rId-_ji6ngnDNfI_FqPTg/exec';
 
-  let selectedSheet = localStorage.getItem('selectedSheet') || 'Sheet1'; // Default sheet
-  let selectedSubject = localStorage.getItem('selectedSubject') || 'ICTSheet'; // Default subject sheet
-  let sheetData = JSON.parse(localStorage.getItem('sheetData')) || {}; // To store the fetched data
+  let selectedSheet = localStorage.getItem('selectedSheet') || 'Sheet1'; 
+  let selectedSubject = localStorage.getItem('selectedSubject') || 'ICTSheet';
+  let sheetData = JSON.parse(localStorage.getItem('sheetData')) || {};
 
   const classOptions = {
-    'Sheet1': ['','1A1', '1A2', '1A3', '1A4', '1A5'],      // Grade 1
-    'Sheet2': ['','2A1', '2A2', '2A3', '2A4', '2A5', '2A6'],  // Grade 2
-    'Sheet3': ['','3A1', '3A2', '3A3', '3A4', '3A5', '3A6'],  // Grade 3
-    'Sheet4': ['','4A2', '4A3', '4A4', '4A5', '4A6', '4A7'],  // Grade 4
-    'Sheet5': ['','5A1', '5A2', '5A3', '5A4', '5A5', '5A6']   // Grade 5
+    'Sheet1': ['','1A1', '1A2', '1A3', '1A4', '1A5'],  
+    'Sheet2': ['','2A1', '2A2', '2A3', '2A4', '2A5', '2A6'],  
+    'Sheet3': ['','3A1', '3A2', '3A3', '3A4', '3A5', '3A6'],  
+    'Sheet4': ['','4A2', '4A3', '4A4', '4A5', '4A6', '4A7'],  
+    'Sheet5': ['','5A1', '5A2', '5A3', '5A4', '5A5', '5A6']   
   };
 
   const fetchClassData = (className) => {
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
       .then(response => response.json())
       .then(data => {
         sheetData = data;
-        localStorage.setItem('sheetData', JSON.stringify(sheetData)); // Save data to localStorage
+        localStorage.setItem('sheetData', JSON.stringify(sheetData)); 
         populateDropdowns();
       })
       .catch(error => console.error('Error fetching data:', error));
@@ -41,9 +41,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const updateClassDropdown = (grade) => {
     const classSelect = document.getElementById('classSelect');
-    classSelect.innerHTML = ''; // Clear existing options
+    classSelect.innerHTML = '';
 
-    // Populate class options based on the selected grade
     const classes = classOptions[grade] || [];
     classes.forEach(className => {
       const option = document.createElement('option');
@@ -51,10 +50,9 @@ document.addEventListener('DOMContentLoaded', function () {
       option.textContent = className;
       classSelect.appendChild(option);
     });
-    
-    // Enable the class dropdown after classes are populated
+
     classSelect.disabled = false;
-    document.getElementById('goBtn').disabled = false; // Enable the Go button
+    document.getElementById('goBtn').disabled = false; 
     localStorage.setItem('selectedClass', classSelect.value);
   };
 
@@ -115,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
       let comment = e.value; 
       if (comment) {
         summaryGenerated = true;
-        if (i >= 1 && i <= 4) {  // Behavior, Classwork, Participation, Improvements
+        if (i >= 1 && i <= 4) {  
           return applyGenderPronouns(comment, gender);
         }
         return comment;
@@ -232,7 +230,7 @@ document.addEventListener('DOMContentLoaded', function () {
           }
         });
 
-        summaryDiv.addEventListener('input', saveTableData); // Save the edited summary
+        summaryDiv.addEventListener('input', saveTableData);
       });
     }
   };
@@ -244,8 +242,8 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   const classSelect = document.getElementById('classSelect');
-  classSelect.disabled = true; // Disable class select initially
-  document.getElementById('goBtn').disabled = true; // Disable Go button initially
+  classSelect.disabled = true;
+  document.getElementById('goBtn').disabled = true;
 
   updateClassDropdown(selectedSheet);
 
@@ -254,77 +252,20 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('gradeSelect').addEventListener('change', function () {
     selectedSheet = this.value;
     localStorage.setItem('selectedSheet', selectedSheet);
-    fetchData();
     updateClassDropdown(selectedSheet);
   });
 
   document.getElementById('subjectSelect').addEventListener('change', function () {
     selectedSubject = this.value;
     localStorage.setItem('selectedSubject', selectedSubject);
-    fetchData();
-  });
-
-  document.getElementById('downloadBtn').addEventListener('click', function() {
-    const table = document.getElementById('commentTable');
-    const summaries = [];
-
-    const selectedGrade = document.getElementById('gradeSelect').options[document.getElementById('gradeSelect').selectedIndex].text;
-    const selectedClass = document.getElementById('classSelect').options[document.getElementById('classSelect').selectedIndex].text;
-    const selectedSubject = document.getElementById('subjectSelect').options[document.getElementById('subjectSelect').selectedIndex].text;
-
-    // Add grade, class, and subject as the first rows in the summary
-    summaries.push(['Grade:', selectedGrade]);
-    summaries.push(['Class:', selectedClass]);
-    summaries.push(['Subject:', selectedSubject]);
-    summaries.push([]); // Add an empty row for spacing
-
-    // Add table headers for selected columns
-    summaries.push(['Name', 'Introduction', 'Behavior', 'Classwork', 'Participation', 'Improvements', 'Additional Comments', 'Summary']);
-
-    // Loop through each row of the table
-    for (let i = 1, row; row = table.rows[i]; i++) {
-      const name = row.cells[0].textContent; // Name column
-      const introduction = row.cells[2].querySelector('select')?.value || ''; // Introduction column
-      const behavior = row.cells[3].querySelector('select')?.value || ''; // Behavior column
-      const classwork = row.cells[4].querySelector('select')?.value || ''; // Classwork column
-      const participation = row.cells[5].querySelector('select')?.value || ''; // Participation column
-      const improvements = row.cells[6].querySelector('select')?.value || ''; // Improvements column
-      const additionalComments = row.cells[7].querySelector('input')?.value || ''; // Additional Comments column
-      const summary = row.cells[8].querySelector('div').textContent || ''; // Summary column
-      
-      // Apply gender-specific pronouns to Behavior, Classwork, Participation, and Improvements
-      const gender = row.cells[1].querySelector('input')?.value.trim().toLowerCase();
-      const correctedBehavior = applyGenderPronouns(behavior, gender);
-      const correctedClasswork = applyGenderPronouns(classwork, gender);
-      const correctedParticipation = applyGenderPronouns(participation, gender);
-      const correctedImprovements = applyGenderPronouns(improvements, gender);
-
-      // Add the data to the summaries array
-      summaries.push([name, introduction, correctedBehavior, correctedClasswork, correctedParticipation, correctedImprovements, additionalComments, summary]);
-    }
-
-    // Create a worksheet and a workbook, then write the data to a file
-    const worksheet = XLSX.utils.aoa_to_sheet(summaries);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Summaries');
-    XLSX.writeFile(workbook, 'Teacher_Comments_Summary.xlsx');
-  });
-
-  document.getElementById('createNewBtn').addEventListener('click', function() {
-    localStorage.removeItem('selectedSheet');
-    localStorage.removeItem('selectedSubject');
-    localStorage.removeItem('sheetData');
-    localStorage.removeItem('tableData');
-    location.reload();
   });
 
   document.getElementById('goBtn').addEventListener('click', function() {
     const selectedClass = document.getElementById('classSelect').value;
 
-    // Fetch data for the specific class sheet using the new Web App URL
     fetchClassData(selectedClass).then(data => {
       const tableBody = document.getElementById('commentTable').querySelector('tbody');
-      tableBody.innerHTML = ''; // Clear existing table rows
+      tableBody.innerHTML = ''; 
 
       if (data && Array.isArray(data)) {
         data.forEach(item => {
@@ -388,9 +329,59 @@ document.addEventListener('DOMContentLoaded', function () {
             }
           });
 
-          summaryDiv.addEventListener('input', saveTableData); // Save the edited summary
+          summaryDiv.addEventListener('input', saveTableData);
         });
       }
     });
+
+    fetchData();
+  });
+
+  document.getElementById('downloadBtn').addEventListener('click', function() {
+    const table = document.getElementById('commentTable');
+    const summaries = [];
+
+    const selectedGrade = document.getElementById('gradeSelect').options[document.getElementById('gradeSelect').selectedIndex].text;
+    const selectedClass = document.getElementById('classSelect').options[document.getElementById('classSelect').selectedIndex].text;
+    const selectedSubject = document.getElementById('subjectSelect').options[document.getElementById('subjectSelect').selectedIndex].text;
+
+    summaries.push(['Grade:', selectedGrade]);
+    summaries.push(['Class:', selectedClass]);
+    summaries.push(['Subject:', selectedSubject]);
+    summaries.push([]); 
+
+    summaries.push(['Name', 'Introduction', 'Behavior', 'Classwork', 'Participation', 'Improvements', 'Additional Comments', 'Summary']);
+
+    for (let i = 1, row; row = table.rows[i]; i++) {
+      const name = row.cells[0].textContent;
+      const introduction = row.cells[2].querySelector('select')?.value || ''; 
+      const behavior = row.cells[3].querySelector('select')?.value || ''; 
+      const classwork = row.cells[4].querySelector('select')?.value || ''; 
+      const participation = row.cells[5].querySelector('select')?.value || ''; 
+      const improvements = row.cells[6].querySelector('select')?.value || ''; 
+      const additionalComments = row.cells[7].querySelector('input')?.value || ''; 
+      const summary = row.cells[8].querySelector('div').textContent || ''; 
+      
+      const gender = row.cells[1].querySelector('input')?.value.trim().toLowerCase();
+      const correctedBehavior = applyGenderPronouns(behavior, gender);
+      const correctedClasswork = applyGenderPronouns(classwork, gender);
+      const correctedParticipation = applyGenderPronouns(participation, gender);
+      const correctedImprovements = applyGenderPronouns(improvements, gender);
+
+      summaries.push([name, introduction, correctedBehavior, correctedClasswork, correctedParticipation, correctedImprovements, additionalComments, summary]);
+    }
+
+    const worksheet = XLSX.utils.aoa_to_sheet(summaries);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Summaries');
+    XLSX.writeFile(workbook, 'Teacher_Comments_Summary.xlsx');
+  });
+
+  document.getElementById('createNewBtn').addEventListener('click', function() {
+    localStorage.removeItem('selectedSheet');
+    localStorage.removeItem('selectedSubject');
+    localStorage.removeItem('sheetData');
+    localStorage.removeItem('tableData');
+    location.reload();
   });
 });
