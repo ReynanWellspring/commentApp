@@ -20,23 +20,18 @@ document.addEventListener('DOMContentLoaded', function () {
     'Sheet5': ['','5A1', '5A2', '5A3', '5A4', '5A5', '5A6']   // Grade 5
   };
 
-  const fetchClassData = (className) => {
-    const url = `${classDataUrl}?sheet=${className}`;
-    return fetch(url)
-      .then(response => response.json())
-      .catch(error => console.error('Error fetching class data:', error));
-  };
-
-  const fetchData = () => {
-    const url = sheetUrls[selectedSubject] + '?sheet=' + selectedSheet;
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        sheetData = data;
-        localStorage.setItem('sheetData', JSON.stringify(sheetData)); // Save data to localStorage
-        populateDropdowns();
-      })
-      .catch(error => console.error('Error fetching data:', error));
+  // Fetch all data in one call and store it locally
+  const fetchData = async () => {
+    if (!localStorage.getItem('sheetData')) {
+      const url = `${sheetUrls[selectedSubject]}?sheet=${selectedSheet}`;
+      const response = await fetch(url);
+      const data = await response.json();
+      localStorage.setItem('sheetData', JSON.stringify(data));
+      sheetData = data;
+    } else {
+      sheetData = JSON.parse(localStorage.getItem('sheetData'));
+    }
+    populateDropdowns();
   };
 
   const updateClassDropdown = (grade) => {
@@ -45,12 +40,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Populate class options based on the selected grade
     const classes = classOptions[grade] || [];
+    const fragment = document.createDocumentFragment();
     classes.forEach(className => {
       const option = document.createElement('option');
       option.value = className;
       option.textContent = className;
-      classSelect.appendChild(option);
+      fragment.appendChild(option);
     });
+    classSelect.appendChild(fragment);
     
     // Enable the class dropdown after classes are populated
     classSelect.disabled = false;
@@ -64,33 +61,52 @@ document.addEventListener('DOMContentLoaded', function () {
       if (data && Array.isArray(data)) {
         const dropdowns = document.querySelectorAll(`select[data-category="${category}"]`);
         dropdowns.forEach(dropdown => {
-          dropdown.innerHTML = ''; 
+          const fragmentDropdown = document.createDocumentFragment();
           data.forEach(item => {
             const option = document.createElement('option');
             option.value = item;
             option.textContent = item;
-            dropdown.appendChild(option);
+            fragmentDropdown.appendChild(option);
           });
+          dropdown.innerHTML = '';
+          dropdown.appendChild(fragmentDropdown);
         });
       }
     });
   };
 
+  const debounce = (func, delay) => {
+    let debounceTimer;
+    return function () {
+      const context = this;
+      const args = arguments;
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => func.apply(context, args), delay);
+    };
+  };
+
   const applyGenderPronouns = (text, gender) => {
+    let modifiedText = text.trim();
+
     if (gender === 'f') {
-      return `She ${text.charAt(0).toLowerCase() + text.slice(1)}`
-        .replace(/\bHis\b/g, 'Her')
-        .replace(/\bhis\b/g, 'her')
-        .replace(/\bHim\b/g, 'Her')
-        .replace(/\bhim\b/g, 'her');
+      if (!modifiedText.startsWith("She")) {
+        modifiedText = `She ${modifiedText.charAt(0).toLowerCase()}${modifiedText.slice(1)}`;
+      }
+      modifiedText = modifiedText.replace(/\bhis\b/g, 'her')
+                                 .replace(/\bHis\b/g, 'Her')
+                                 .replace(/\bHim\b/g, 'Her')
+                                 .replace(/\bhim\b/g, 'her');
     } else if (gender === 'm') {
-      return `He ${text.charAt(0).toLowerCase() + text.slice(1)}`
-        .replace(/\bHer\b/g, 'His')
-        .replace(/\bher\b/g, 'his')
-        .replace(/\bHim\b/g, 'Him')
-        .replace(/\bhim\b/g, 'him');
+      if (!modifiedText.startsWith("He")) {
+        modifiedText = `He ${modifiedText.charAt(0).toLowerCase()}${modifiedText.slice(1)}`;
+      }
+      modifiedText = modifiedText.replace(/\bher\b/g, 'his')
+                                 .replace(/\bHer\b/g, 'His')
+                                 .replace(/\bHim\b/g, 'Him')
+                                 .replace(/\bhim\b/g, 'him');
     }
-    return text;
+
+    return modifiedText;
   };
 
   const cleanUpSummary = (summary) => {
@@ -100,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
     return decodedSummary;
   };
 
-  const updateSummary = (name, genderInput, selectedComments, summaryCell) => {
+  const updateSummary = (name, genderInput, selectedComments, summaryDiv) => {
     let gender = genderInput.value.trim().toLowerCase();
     let summaryGenerated = false;
 
@@ -108,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function () {
       let comment = e.value; 
       if (comment) {
         summaryGenerated = true;
-        if (i >= 1 && i <= 4) {
+        if (i >= 1 && i <= 4) {  // Behavior, Classwork, Participation, Improvements
           return applyGenderPronouns(comment, gender);
         }
         return comment;
@@ -124,12 +140,12 @@ document.addEventListener('DOMContentLoaded', function () {
     fullSummary = cleanUpSummary(fullSummary);
 
     if (summaryGenerated) {
-      summaryCell.textContent = fullSummary;
+      summaryDiv.textContent = fullSummary;
     } else {
-      summaryCell.textContent = ''; 
+      summaryDiv.textContent = ''; 
     }
 
-    summaryCell.dataset.fullSummary = fullSummary;
+    summaryDiv.dataset.fullSummary = fullSummary;
 
     saveTableData();
   };
@@ -144,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function () {
         gender: row.cells[1].children[0].value,
         comments: Array.from(row.cells).slice(2, 7).map(cell => cell.children[0].value),
         additionalComments: row.cells[7].children[0].value,
-        summary: row.cells[8].textContent
+        summary: row.cells[8].querySelector('div').textContent
       };
       tableData.push(rowData);
     }
@@ -203,25 +219,29 @@ document.addEventListener('DOMContentLoaded', function () {
         selectedComments.push(input);
 
         const summaryCell = newRow.insertCell();
-        summaryCell.textContent = rowData.summary;
-        summaryCell.dataset.fullSummary = rowData.summary;
+        const summaryDiv = document.createElement('div');
+        summaryDiv.contentEditable = true;
+        summaryDiv.textContent = rowData.summary;
+        summaryCell.appendChild(summaryDiv);
 
         selectedComments.forEach(element => {
           element.addEventListener('change', function() {
-            updateSummary(rowData.name, genderInput, selectedComments, summaryCell);
+            updateSummary(rowData.name, genderInput, selectedComments, summaryDiv);
           });
           if (element.tagName === 'INPUT') {
             element.addEventListener('input', function() {
-              updateSummary(rowData.name, genderInput, selectedComments, summaryCell);
+              updateSummary(rowData.name, genderInput, selectedComments, summaryDiv);
             });
           }
         });
 
         genderInput.addEventListener('input', function() {
           if (selectedComments.some(select => select.value)) {
-            updateSummary(rowData.name, genderInput, selectedComments, summaryCell);
+            updateSummary(rowData.name, genderInput, selectedComments, summaryDiv);
           }
         });
+
+        summaryDiv.addEventListener('input', saveTableData); // Save the edited summary
       });
     }
   };
@@ -240,18 +260,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
   loadTableData();
 
-  document.getElementById('gradeSelect').addEventListener('change', function () {
+  document.getElementById('gradeSelect').addEventListener('change', debounce(function () {
     selectedSheet = this.value;
     localStorage.setItem('selectedSheet', selectedSheet);
     fetchData();
     updateClassDropdown(selectedSheet);
-  });
+  }, 300));
 
-  document.getElementById('subjectSelect').addEventListener('change', function () {
+  document.getElementById('subjectSelect').addEventListener('change', debounce(function () {
     selectedSubject = this.value;
     localStorage.setItem('selectedSubject', selectedSubject);
     fetchData();
-  });
+  }, 300));
 
   document.getElementById('downloadBtn').addEventListener('click', function() {
     const table = document.getElementById('commentTable');
@@ -261,20 +281,38 @@ document.addEventListener('DOMContentLoaded', function () {
     const selectedClass = document.getElementById('classSelect').options[document.getElementById('classSelect').selectedIndex].text;
     const selectedSubject = document.getElementById('subjectSelect').options[document.getElementById('subjectSelect').selectedIndex].text;
 
+    // Add grade, class, and subject as the first rows in the summary
     summaries.push(['Grade:', selectedGrade]);
     summaries.push(['Class:', selectedClass]);
     summaries.push(['Subject:', selectedSubject]);
-    summaries.push([]);
-    summaries.push(['Name', 'Summary']);
+    summaries.push([]); // Add an empty row for spacing
 
+    // Add table headers for selected columns
+    summaries.push(['Name', 'Introduction', 'Behavior', 'Classwork', 'Participation', 'Improvements', 'Additional Comments', 'Summary']);
+
+    // Loop through each row of the table
     for (let i = 1, row; row = table.rows[i]; i++) {
-      const name = row.cells[0].textContent;
-      const summary = row.cells[8].dataset.fullSummary || row.cells[8].textContent;
-      if (summary) {
-        summaries.push([name, summary]);
-      }
+      const name = row.cells[0].textContent; // Name column
+      const introduction = row.cells[2].querySelector('select')?.value || ''; // Introduction column
+      const behavior = row.cells[3].querySelector('select')?.value || ''; // Behavior column
+      const classwork = row.cells[4].querySelector('select')?.value || ''; // Classwork column
+      const participation = row.cells[5].querySelector('select')?.value || ''; // Participation column
+      const improvements = row.cells[6].querySelector('select')?.value || ''; // Improvements column
+      const additionalComments = row.cells[7].querySelector('input')?.value || ''; // Additional Comments column
+      const summary = row.cells[8].querySelector('div').textContent || ''; // Summary column
+      
+      // Apply gender-specific pronouns to Behavior, Classwork, Participation, and Improvements
+      const gender = row.cells[1].querySelector('input')?.value.trim().toLowerCase();
+      const correctedBehavior = applyGenderPronouns(behavior, gender);
+      const correctedClasswork = applyGenderPronouns(classwork, gender);
+      const correctedParticipation = applyGenderPronouns(participation, gender);
+      const correctedImprovements = applyGenderPronouns(improvements, gender);
+
+      // Add the data to the summaries array
+      summaries.push([name, introduction, correctedBehavior, correctedClasswork, correctedParticipation, correctedImprovements, additionalComments, summary]);
     }
 
+    // Create a worksheet and a workbook, then write the data to a file
     const worksheet = XLSX.utils.aoa_to_sheet(summaries);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Summaries');
@@ -338,25 +376,28 @@ document.addEventListener('DOMContentLoaded', function () {
           selectedComments.push(input);
 
           const summaryCell = newRow.insertCell();
+          const summaryDiv = document.createElement('div');
+          summaryDiv.contentEditable = true;
+          summaryCell.appendChild(summaryDiv);
 
           selectedComments.forEach(element => {
             element.addEventListener('change', function() {
-              updateSummary(item.Name, genderInput, selectedComments, summaryCell);
+              updateSummary(item.Name, genderInput, selectedComments, summaryDiv);
             });
             if (element.tagName === 'INPUT') {
               element.addEventListener('input', function() {
-                updateSummary(item.Name, genderInput, selectedComments, summaryCell);
+                updateSummary(item.Name, genderInput, selectedComments, summaryDiv);
               });
             }
           });
 
           genderInput.addEventListener('input', function() {
             if (selectedComments.some(select => select.value)) {
-              updateSummary(item.Name, genderInput, selectedComments, summaryCell);
+              updateSummary(item.Name, genderInput, selectedComments, summaryDiv);
             }
           });
 
-          summaryCell.textContent = '';
+          summaryDiv.addEventListener('input', saveTableData); // Save the edited summary
         });
       }
     });
