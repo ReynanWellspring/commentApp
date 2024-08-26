@@ -78,21 +78,27 @@ document.addEventListener('DOMContentLoaded', function () {
     let modifiedText = text.trim();
 
     if (gender === 'f') {
-      if (!modifiedText.startsWith("She")) {
-        modifiedText = `She ${modifiedText.charAt(0).toLowerCase()}${modifiedText.slice(1)}`;
-      }
-      modifiedText = modifiedText.replace(/\bhis\b/g, 'her')
-                                 .replace(/\bHis\b/g, 'Her')
-                                 .replace(/\bHim\b/g, 'Her')
-                                 .replace(/\bhim\b/g, 'her');
+        // Check for male pronouns and correct them to female pronouns
+        modifiedText = modifiedText.replace(/\bhe\b/gi, 'she')
+                                   .replace(/\bhis\b/gi, 'her')
+                                   .replace(/\bhim\b/gi, 'her')
+                                   .replace(/\bhe's\b/gi, 'she\'s')
+                                   .replace(/\bhimself\b/gi, 'herself');
+        // Ensure the paragraph starts with "She" if it doesn't already
+        if (!/^(she|her)/i.test(modifiedText)) {
+            modifiedText = `She ${modifiedText.charAt(0).toLowerCase()}${modifiedText.slice(1)}`;
+        }
     } else if (gender === 'm') {
-      if (!modifiedText.startsWith("He")) {
-        modifiedText = `He ${modifiedText.charAt(0).toLowerCase()}${modifiedText.slice(1)}`;
-      }
-      modifiedText = modifiedText.replace(/\bher\b/g, 'his')
-                                 .replace(/\bHer\b/g, 'His')
-                                 .replace(/\bHim\b/g, 'Him')
-                                 .replace(/\bhim\b/g, 'him');
+        // Check for female pronouns and correct them to male pronouns
+        modifiedText = modifiedText.replace(/\bshe\b/gi, 'he')
+                                   .replace(/\bher\b/gi, 'his')
+                                   .replace(/\bhers\b/gi, 'his')
+                                   .replace(/\bshe's\b/gi, 'he\'s')
+                                   .replace(/\bherself\b/gi, 'himself');
+        // Ensure the paragraph starts with "He" if it doesn't already
+        if (!/^(he|his)/i.test(modifiedText)) {
+            modifiedText = `He ${modifiedText.charAt(0).toLowerCase()}${modifiedText.slice(1)}`;
+        }
     }
 
     return modifiedText;
@@ -303,7 +309,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
           const additionalCommentsCell = newRow.insertCell();
           const input = document.createElement('input');
-          input.type = 'text';
           additionalCommentsCell.appendChild(input);
           selectedComments.push(input);
 
