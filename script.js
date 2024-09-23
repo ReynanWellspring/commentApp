@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
   const sheetUrls = {
-    'EnglishSheet': 'https://script.google.com/macros/s/AKfycbyXvhZFuFL1gllrdOjgnNfnqFfIkGiDAotHob2pZeFvU1dfWW0zgNzRLmCMDUekXVUuFA/exec',
-    'MathSheet': 'https://script.google.com/macros/s/AKfycby3yb7vXEqdqNLU9z3xUeybkYqL2cygrsDUvtmKi5t0Defxf-BR-JeBJn4BPMVJDPYo/exec',
-    'ScienceSheet': 'https://script.google.com/macros/s/AKfycbyfY-ZB1F-9dcChFe4vWKC23x78O9LpBSEbKtuCCLTEkpFYk8bWDW9KdbZ5jKU9yF-Riw/exec',
+    'EnglishSheet': 'https://script.google.com/macros/s/AKfycbxVb6AfquBhjNOMXYRy2914DZu_08x-u1-4hbKnYe49HrUYDxkPNb7ltUxx3IAdgDdRiw/exec',
+    'MathSheet': 'https://script.google.com/macros/s/AKfycbyQoaYAruRHG8mJvpygzOAUSdWp9bnZAZ7958uFifW6GhlBZ4K_VIDMhJ2IMxsKAgxR/exec',
+    'ScienceSheet': 'https://script.google.com/macros/s/AKfycbyhyWjEqnbXDfbXCMX5U4saJ8qSrpoqUk4eixDC7dboc2dF7PZbg0X91-ewbo0vHZZPKw/exec',
     'ICTSheet': 'https://script.google.com/macros/s/AKfycbzaMRyBSWO8e1pRcSryCLMNyqCI9fQhfpqu1m14XTCBZRnx-wDPcdyljHPdfNZ5iNGg/exec',
   };
 
