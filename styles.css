@@ -7,7 +7,7 @@ body {
   flex-direction: column;
   justify-content: start;
   align-items: center;
-  min-height: 100vh; 
+  min-height: 100vh;
   color: #333;
 }
 
@@ -33,20 +33,20 @@ h2 {
 .form-group {
   display: flex;
   align-items: center;
-  justify-content: center; /* Center the select elements and Go button */
+  justify-content: center;
   margin-bottom: 20px;
   gap: 10px;
 }
 
 .buttons-group {
   display: flex;
-  justify-content: center; /* Center the buttons */
-  gap: 10px; /* Add gap between the buttons */
+  justify-content: center;
+  gap: 10px;
   margin-top: 10px;
 }
 
 #downloadBtn, #createNewBtn {
-  padding: 8px 16px; /* Maintain padding */
+  padding: 8px 16px;
   color: white;
   border: none;
   border-radius: 8px;
@@ -67,7 +67,7 @@ h2 {
 }
 
 #createNewBtn {
-  background-color: #f39c12; /* Orange color */
+  background-color: #f39c12;
 }
 
 #createNewBtn:hover {
@@ -76,8 +76,8 @@ h2 {
 }
 
 #goBtn {
-  padding: 6px 12px; /* Reduced padding */
-  background-color: #28a745; /* Green color */
+  padding: 6px 12px;
+  background-color: #28a745;
   color: white;
   border: none;
   border-radius: 8px;
@@ -108,7 +108,7 @@ table {
 }
 
 th, td {
-  text-align: center; /* Center align the text */
+  text-align: center;
   padding: 10px;
   border-bottom: 1px solid #ddd;
   font-size: 0.9em;
@@ -118,7 +118,7 @@ th, td {
 th {
   background-color: #007bff;
   color: white;
-  text-transform: uppercase;  
+  text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 600;
 }
@@ -127,44 +127,54 @@ td {
   padding: 8px 10px;
 }
 
-td input[type="text"] {
-  width: 100%;
-  padding: 6px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 0.85em;
-  box-sizing: border-box;
-  background-color: #f8f9fa;
-  text-align: center; /* Center-align text in Gender input */
-}
-
-td select {
-  width: 100%;
-  padding: 6px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 0.85em;
-  box-sizing: border-box;
-  background-color: #f8f9fa;
-}
-
-td:nth-child(2) {
-  width: 8%; /* Reduce the width of Gender column */
-}
-
-td:nth-child(8) {
-  width: 10%; /* Reduce the width of Additional Comments column */
-}
-
-td:nth-child(1) {
-  font-size: 0.75em; /* Smaller font size for student names */
+/* Ensure uniform width and alignment for all columns from Student Code to Summary */
+.column-uniform {
+  width: 10%;
+  text-align: center;
 }
 
 .summary-column {
-  width: 18%; /* Adjust the width of Summary column */
-  font-size: 0.90em; /* Smaller font size for Summary content */
-  text-align: center; /* Align text to the left in Summary column */
-  padding: 10px; /* Add padding for better readability */
+  width: 18%;
+  font-size: 0.90em;
+  text-align: center;
+  padding: 10px;
+}
+
+.header-merged {
+  background-color: #007bff;
+  color: white;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 15px 0;
+}
+
+.sub-header {
+  font-size: 0.85em;
+  font-weight: 600;
+  background-color: #5a9bd5;
+  color: white;
+}
+
+.column-small {
+  width: 5%;
+}
+
+.comment-column {
+  width: 70px; /* Decrease the width to cut the size more than 50% */
+  max-width: 70px; /* Prevent the column from expanding beyond this width */
+  text-align: center;
+  padding: 10px;
+  overflow: hidden; /* Prevents overflow content from affecting the column width */
+}
+
+.comment-column select {
+  width: 100%; /* Ensures the dropdown fills the column width */
+  box-sizing: border-box; /* Ensures padding does not affect the dropdown width */
+  padding: 3px; /* Reduce padding for better fit */
+  font-size: 0.9em;
+  white-space: nowrap; /* Prevents dropdown text from wrapping */
+  overflow: hidden; /* Hides overflow text */
+  text-overflow: ellipsis; /* Adds "..." to indicate text overflow */
 }
 
 @media (max-width: 768px) {
@@ -181,7 +191,7 @@ td:nth-child(1) {
 
   .buttons-group {
     justify-content: center;
-    margin-top: 10px; /* Ensure spacing between the selects and buttons on small screens */
+    margin-top: 10px;
   }
 }
 
