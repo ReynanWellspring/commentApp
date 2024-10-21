@@ -14,7 +14,7 @@ body {
 h2 {
   text-align: center;
   color: #4CAF50;
-  font-size: 1.8em;
+  font-size: 1.6em; /* Smaller heading */
   margin-bottom: 20px;
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -52,7 +52,7 @@ h2 {
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.1s ease;
-  font-size: 1em;
+  font-size: 0.85em; /* Smaller font size for buttons */
   font-weight: 600;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
@@ -83,7 +83,7 @@ h2 {
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.1s ease;
-  font-size: 1em;
+  font-size: 0.85em; /* Smaller font size for Go button */
   font-weight: 600;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
@@ -98,7 +98,7 @@ h2 {
 }
 
 table {
-  width: 100%;
+  width: 150%;
   border-collapse: collapse;
   margin-bottom: 20px;
   background-color: #fff;
@@ -109,9 +109,9 @@ table {
 
 th, td {
   text-align: center;
-  padding: 10px;
+  padding: 8px; /* Smaller padding */
   border-bottom: 1px solid #ddd;
-  font-size: 0.9em;
+  font-size: 0.65em; /* Smaller font size for table */
   vertical-align: middle;
 }
 
@@ -124,63 +124,69 @@ th {
 }
 
 td {
-  padding: 8px 10px;
+  padding: 6px 8px; /* Smaller padding */
 }
 
-/* Ensure uniform width and alignment for all columns from Student Code to Summary */
-.column-uniform {
-  width: 10%;
-  text-align: center;
-}
-
-.summary-column {
-  width: 18%;
-  font-size: 0.90em;
-  text-align: center;
-  padding: 10px;
-}
-
-.header-merged {
-  background-color: #007bff;
-  color: white;
-  text-transform: uppercase;
-  font-weight: 600;
-  padding: 15px 0;
-}
-
-.sub-header {
-  font-size: 0.85em;
-  font-weight: 600;
-  background-color: #5a9bd5;
-  color: white;
-}
-
-.column-small {
-  width: 5%;
-}
-
+/* Set a fixed width for comment columns from "Introduction" to "Improvements" */
 .comment-column {
-  width: 70px; /* Decrease the width to cut the size more than 50% */
-  max-width: 70px; /* Prevent the column from expanding beyond this width */
+  width: 80px; /* Fixed width */
+  max-width: 80px; /* Prevents columns from expanding beyond this width */
   text-align: center;
-  padding: 10px;
+  padding: 5px;
   overflow: hidden; /* Prevents overflow content from affecting the column width */
 }
 
-.comment-column select {
-  width: 100%; /* Ensures the dropdown fills the column width */
-  box-sizing: border-box; /* Ensures padding does not affect the dropdown width */
-  padding: 3px; /* Reduce padding for better fit */
-  font-size: 0.9em;
-  white-space: nowrap; /* Prevents dropdown text from wrapping */
-  overflow: hidden; /* Hides overflow text */
-  text-overflow: ellipsis; /* Adds "..." to indicate text overflow */
+/* Container for dropdowns to enforce width constraints */
+.comment-container {
+  position: relative;
+  width: 100%; /* Make the container fill the column */
+  overflow: hidden; /* Hide any overflow */
 }
 
+.comment-container select {
+  width: 100%; /* Ensure the dropdown fits within the container */
+  padding: 3px;
+  font-size: 0.75em; /* Smaller font size for dropdowns */
+  box-sizing: border-box; /* Includes padding within the width */
+  text-overflow: ellipsis; /* Truncate overflowing text */
+  appearance: none; /* Hide default dropdown arrow */
+}
+
+/* Add a custom arrow for the dropdown */
+.comment-container:after {
+  content: '▼';
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.comment-container select option {
+  width: 70%; /* Ensure options inside the dropdown do not exceed the dropdown width */
+  text-overflow: ellipsis; /* Adds "..." to overflowing text in options */
+  white-space: nowrap; /* Prevent text wrapping in the dropdown options */
+  overflow: hidden; /* Hides overflow text */
+}
+
+/* Adjustments for Summary column font size and behavior */
+.summary-column {
+  font-size: 0.75em; /* Slightly larger for readability */
+  width: 10%; /* Limit width to 30% of the table */
+  white-space: nowrap; /* Allow text wrapping */
+  overflow: hidden; /* Hide overflowing content */
+  text-overflow: ellipsis; /* Show "..." if the text is too long */
+  padding: 8px; /* Adjust padding if necessary */
+  line-height: 1.2em; /* Improve readability and spacing */
+  word-break: break-word; /* Break words if needed to prevent overflow */
+  text-align: left; /* Align text to the left */
+}
+
+/* Optional: Adjust behavior for smaller screens */
 @media (max-width: 768px) {
   th, td {
-    font-size: 0.65em;
-    padding: 10px;
+    font-size: 0.6em; /* Smaller font size for mobile */
+    padding: 8px;
   }
 
   .form-group {
@@ -191,23 +197,267 @@ td {
 
   .buttons-group {
     justify-content: center;
-    margin-top: 10px;
+    margin-top: 10px;body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f0f2f5;
+      margin: 0;
+      padding-top: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: start;
+      align-items: center;
+      min-height: 100vh;
+      color: #333;
+    }
+    
+    h2 {
+      text-align: center;
+      color: #4CAF50;
+      font-size: 1.6em; /* Smaller heading */
+      margin-bottom: 20px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    
+    .container {
+      width: 95%;
+      max-width: 1400px;
+      padding: 20px;
+      background-color: #ffffff;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      overflow-x: auto;
+    }
+    
+    .form-group {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+    
+    .buttons-group {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    
+    #downloadBtn, #createNewBtn, #saveBtn {
+      padding: 8px 16px;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.1s ease;
+      font-size: 0.85em; /* Smaller font size for buttons */
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    #downloadBtn {
+      background-color: #007bff;
+    }
+    
+    #downloadBtn:hover {
+      background-color: #0056b3;
+      transform: translateY(-2px);
+    }
+    
+    #createNewBtn {
+      background-color: #f39c12;
+    }
+    
+    #createNewBtn:hover {
+      background-color: #e67e22;
+      transform: translateY(-2px);
+    }
+    
+    #saveBtn {
+      background-color: #1e90ff; /* Blue color for Save button */
+    }
+    
+    #saveBtn:hover {
+      background-color: #0062cc;
+      transform: translateY(-2px);
+    }
+    
+    #goBtn {
+      padding: 6px 12px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.1s ease;
+      font-size: 0.85em; /* Smaller font size for Go button */
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    #goBtn:hover {
+      background-color: #218838;
+      transform: translateY(-2px);
+    }
+    
+    .table-wrapper {
+      overflow-x: auto;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    th, td {
+      text-align: center;
+      padding: 8px; /* Smaller padding */
+      border-bottom: 1px solid #ddd;
+      font-size: 0.75em; /* Smaller font size for table */
+      vertical-align: middle;
+    }
+    
+    th {
+      background-color: #007bff;
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+    }
+    
+    td {
+      padding: 6px 8px; /* Smaller padding */
+    }
+    
+    /* Set a fixed width for comment columns from "Introduction" to "Improvements" */
+    .comment-column {
+      width: 80px; /* Fixed width */
+      max-width: 80px; /* Prevents columns from expanding beyond this width */
+      text-align: center;
+      padding: 5px;
+      overflow: hidden; /* Prevents overflow content from affecting the column width */
+    }
+    
+    /* Container for dropdowns to enforce width constraints */
+    .comment-container {
+      position: relative;
+      width: 100%; /* Make the container fill the column */
+      overflow: hidden; /* Hide any overflow */
+    }
+    
+    .comment-container select {
+      width: 100%; /* Ensure the dropdown fits within the container */
+      padding: 3px;
+      font-size: 0.75em; /* Smaller font size for dropdowns */
+      box-sizing: border-box; /* Includes padding within the width */
+      text-overflow: ellipsis; /* Truncate overflowing text */
+      appearance: none; /* Hide default dropdown arrow */
+    }
+    
+    /* Add a custom arrow for the dropdown */
+    .comment-container:after {
+      content: '▼';
+      position: absolute;
+      top: 50%;
+      right: 8px;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+    
+    .comment-container select option {
+      width: 100%; /* Ensure options inside the dropdown do not exceed the dropdown width */
+      text-overflow: ellipsis; /* Adds "..." to overflowing text in options */
+      white-space: nowrap; /* Prevent text wrapping in the dropdown options */
+      overflow: hidden; /* Hides overflow text */
+    }
+    
+    /* Adjustments for Summary column font size and behavior */
+    .summary-column {
+      font-size: 0.75em; /* Slightly larger for readability */
+      width: 30%; /* Limit width to 30% of the table */
+      white-space: normal; /* Allow text wrapping */
+      overflow: hidden; /* Hide overflowing content */
+      text-overflow: ellipsis; /* Show "..." if the text is too long */
+      padding: 8px; /* Adjust padding if necessary */
+      line-height: 1.2em; /* Improve readability and spacing */
+      word-break: break-word; /* Break words if needed to prevent overflow */
+      text-align: left; /* Align text to the left */
+    }
+    
+    /* Optional: Adjust behavior for smaller screens */
+    @media (max-width: 768px) {
+      th, td {
+        font-size: 0.6em; /* Smaller font size for mobile */
+        padding: 8px;
+      }
+    
+      .form-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+    
+      .buttons-group {
+        justify-content: center;
+        margin-top: 10px;
+      }
+    
+      .summary-column {
+        width: 40%; /* Limit width to 40% on smaller screens */
+      }
+    }
+    
+    @media (max-width: 480px) {
+      h2 {
+        font-size: 1.4em; /* Smaller heading for small screens */
+        margin-bottom: 15px;
+      }
+    
+      th, td {
+        font-size: 0.7em; /* Smaller font size for small screens */
+        padding: 6px;
+      }
+    
+      #downloadBtn, #createNewBtn, #saveBtn, #goBtn {
+        padding: 8px 12px;
+        font-size: 0.75em; /* Smaller font size for buttons */
+      }
+    
+      .summary-column {
+        width: 100%; /* Full width on very small screens */
+      }
+    }
+    
+  }
+
+  .summary-column {
+    width: 40%; /* Limit width to 40% on smaller screens */
   }
 }
 
 @media (max-width: 480px) {
   h2 {
-    font-size: 1.6em;
+    font-size: 1.4em; /* Smaller heading for small screens */
     margin-bottom: 15px;
   }
 
   th, td {
-    font-size: 0.8em;
-    padding: 8px;
+    font-size: 0.7em; /* Smaller font size for small screens */
+    padding: 6px;
   }
 
   #downloadBtn, #createNewBtn, #goBtn {
     padding: 8px 12px;
-    font-size: 0.85em;
+    font-size: 0.75em; /* Smaller font size for buttons */
+  }
+
+  .summary-column {
+    width: 100%; /* Full width on very small screens */
   }
 }

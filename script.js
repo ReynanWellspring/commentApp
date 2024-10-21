@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const data = await fetchDataFromGoogleSheet(selectedClass);
     
     if (data && data.length > 0) {
-      data.forEach((rowData) => {
+      data.forEach((rowData, rowIndex) => {
         const newRow = tableBody.insertRow();
 
         rowData.slice(0, 10).forEach((cellData, index) => {
@@ -62,38 +62,57 @@ document.addEventListener('DOMContentLoaded', function () {
           cell.textContent = cellData;
         });
 
-        addCommentColumns(newRow, rowData[4]);
+        addCommentColumns(newRow, rowData[4], rowData[3], rowIndex);
       });
     }
+
+    // Add event listeners to enforce dropdown width
+    enforceDropdownWidth();
+
+    // Restore saved data if available
+    restoreSavedData();
   };
 
-  const addCommentColumns = (newRow, gender) => {
+  const addCommentColumns = (newRow, gender, firstName, rowIndex) => {
     const selectedComments = [];
 
-    ["introduction", "behavior", "classwork", "participation", "improvements"].forEach((category) => {
+    ["introduction", "behavior", "classwork", "participation", "improvements"].forEach((category, index) => {
       const cell = newRow.insertCell();
+      
+      // Create container for the dropdown
+      const container = document.createElement('div');
+      container.classList.add('comment-container');
+
       const select = document.createElement('select');
       select.dataset.category = category;
+      select.dataset.rowIndex = rowIndex;
+      select.dataset.columnIndex = index;
       populateOptions(select, category);
-      cell.appendChild(select);
+      
+      // Append select to container, and container to the cell
+      container.appendChild(select);
+      cell.appendChild(container);
+      
       selectedComments.push(select);
     });
 
-    const additionalCommentsCell = newRow.insertCell();
-    const input = document.createElement('input');
-    input.type = 'text';
-    additionalCommentsCell.appendChild(input);
-    selectedComments.push(input);
-
     const summaryCell = newRow.insertCell();
+    summaryCell.classList.add('summary-column');
     const summaryDiv = document.createElement('div');
     summaryDiv.contentEditable = true;
     summaryCell.appendChild(summaryDiv);
 
     selectedComments.forEach((element) => {
-      element.addEventListener('change', () => updateSummary(newRow.cells[2].textContent, gender, selectedComments, summaryDiv));
+      element.addEventListener('change', () => {
+        updateSummary(firstName, gender, selectedComments, summaryDiv);
+        saveData(rowIndex, element.dataset.columnIndex, element.value);
+      });
+
       if (element.tagName === 'INPUT') {
-        element.addEventListener('input', () => updateSummary(newRow.cells[2].textContent, gender, selectedComments, summaryDiv));
+        element.addEventListener('input', () => {
+          updateSummary(firstName, gender, selectedComments, summaryDiv);
+          saveData(rowIndex, element.dataset.columnIndex, element.value);
+        });
       }
     });
   };
@@ -111,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   };
 
-  const updateSummary = (name, gender, selectedComments, summaryCell) => {
+  const updateSummary = (firstName, gender, selectedComments, summaryCell) => {
     const pronouns = {
       'M': { subject: 'He', object: 'him', possessive: 'his' },
       'F': { subject: 'She', object: 'her', possessive: 'her' }
@@ -119,32 +138,57 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const currentPronoun = pronouns[gender] || pronouns['M'];
 
+    let summaryText = `${firstName} `;
+
     const introduction = selectedComments[0].value;
-    const behavior = selectedComments[1].value;
-    const classwork = selectedComments[2].value;
-    const participation = selectedComments[3].value;
+    const behavior = `${currentPronoun.subject} ${selectedComments[1].value.toLowerCase()}`;
+    const classwork = `${currentPronoun.possessive.charAt(0).toUpperCase() + currentPronoun.possessive.slice(1)} classwork ${selectedComments[2].value.toLowerCase()}`;
+    const participation = `${currentPronoun.subject} ${selectedComments[3].value.toLowerCase()}`;
     const improvements = selectedComments[4].value;
-    const additionalComments = selectedComments[5].value;
 
-    let summaryText = `${name} has shown ${introduction.toLowerCase()}. ${currentPronoun.subject} ${behavior.toLowerCase()}. `;
-    summaryText += `${currentPronoun.possessive.charAt(0).toUpperCase() + currentPronoun.possessive.slice(1)} classwork ${classwork.toLowerCase()}. `;
-    summaryText += `${currentPronoun.subject} ${participation.toLowerCase()}. ${improvements}. `;
-    
-    if (additionalComments) {
-      summaryText += additionalComments + ' ';
-    }
+    summaryText += `${introduction}. ${behavior}. ${classwork}. ${participation}. ${improvements}.`;
 
-    summaryCell.textContent = summaryText.trim();
+    summaryText = summaryText.replace(/\s+/g, ' ').replace(/(\.\s*)+/g, '. ').trim();
+
+    summaryCell.textContent = summaryText;
   };
 
-  const populateDropdowns = () => {
-    ["introduction", "behavior", "classwork", "participation", "improvements"].forEach((category) => {
-      const data = sheetData[category];
-      if (data && Array.isArray(data)) {
-        const dropdowns = document.querySelectorAll(`select[data-category="${category}"]`);
-        dropdowns.forEach(dropdown => populateOptions(dropdown, category));
-      }
+  const enforceDropdownWidth = () => {
+    document.querySelectorAll('.comment-container select').forEach(select => {
+      select.addEventListener('mousedown', function () {
+        this.style.width = `${this.parentElement.clientWidth}px`;
+      });
+
+      select.addEventListener('blur', function () {
+        this.style.width = '100%';
+      });
     });
+  };
+
+  const saveData = (rowIndex, columnIndex, value) => {
+    let savedData = JSON.parse(localStorage.getItem('savedComments')) || {};
+    if (!savedData[rowIndex]) {
+      savedData[rowIndex] = {};
+    }
+    savedData[rowIndex][columnIndex] = value;
+    localStorage.setItem('savedComments', JSON.stringify(savedData));
+  };
+
+  const restoreSavedData = () => {
+    let savedData = JSON.parse(localStorage.getItem('savedComments')) || {};
+    for (let rowIndex in savedData) {
+      for (let columnIndex in savedData[rowIndex]) {
+        let select = document.querySelector(`select[data-row-index="${rowIndex}"][data-column-index="${columnIndex}"]`);
+        if (select) {
+          select.value = savedData[rowIndex][columnIndex];
+        }
+      }
+    }
+  };
+
+  const resetAll = () => {
+    document.getElementById('commentTable').querySelector('tbody').innerHTML = '';
+    localStorage.removeItem('savedComments');
   };
 
   document.getElementById('gradeSelect').addEventListener('change', function () {
@@ -168,11 +212,12 @@ document.addEventListener('DOMContentLoaded', function () {
     populateDropdowns();
   });
 
-  document.getElementById('downloadBtn').addEventListener('click', function() {
-    // Code to download data
+  document.getElementById('saveBtn').addEventListener('click', function() {
+    // Save data is handled dynamically upon dropdown changes
+    alert("Data saved successfully!");
   });
 
   document.getElementById('createNewBtn').addEventListener('click', function() {
-    // Handle new data creation
+    resetAll();
   });
 });
