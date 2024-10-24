@@ -1,3 +1,5 @@
+const maxLengthDisplay = 200; // Giới hạn số ký tự hiển thị là 200
+
 document.addEventListener('DOMContentLoaded', function () {
   const sheetUrls = {
     'EnglishSheet': 'https://script.google.com/macros/s/AKfycbxVb6AfquBhjNOMXYRy2914DZu_08x-u1-4hbKnYe49HrUYDxkPNb7ltUxx3IAdgDdRiw/exec',
@@ -52,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
     tableBody.innerHTML = '';
 
     const data = await fetchDataFromGoogleSheet(selectedClass);
-    
+
     if (data && data.length > 0) {
       data.forEach((rowData, rowIndex) => {
         const newRow = tableBody.insertRow();
@@ -66,11 +68,9 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
 
-    // Add event listeners to enforce dropdown width
-    enforceDropdownWidth();
-
-    // Restore saved data if available
-    restoreSavedData();
+    setupSummaryEvents(); // Thêm sự kiện mở rộng/tắt cho cột Summary
+    enforceDropdownWidth(); // Đảm bảo độ rộng dropdown hợp lý
+    restoreSavedData(); // Khôi phục dữ liệu đã lưu
   };
 
   const addCommentColumns = (newRow, gender, firstName, rowIndex) => {
@@ -78,8 +78,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     ["introduction", "behavior", "classwork", "participation", "improvements"].forEach((category, index) => {
       const cell = newRow.insertCell();
-      
-      // Create container for the dropdown
       const container = document.createElement('div');
       container.classList.add('comment-container');
 
@@ -88,11 +86,10 @@ document.addEventListener('DOMContentLoaded', function () {
       select.dataset.rowIndex = rowIndex;
       select.dataset.columnIndex = index;
       populateOptions(select, category);
-      
-      // Append select to container, and container to the cell
+
       container.appendChild(select);
       cell.appendChild(container);
-      
+
       selectedComments.push(select);
     });
 
@@ -150,7 +147,34 @@ document.addEventListener('DOMContentLoaded', function () {
 
     summaryText = summaryText.replace(/\s+/g, ' ').replace(/(\.\s*)+/g, '. ').trim();
 
+    // Giới hạn ký tự hiển thị
+    if (summaryText.length > maxLengthDisplay) {
+      summaryCell.dataset.fullText = summaryText;
+      summaryText = summaryText.slice(0, maxLengthDisplay) + "...";
+    }
     summaryCell.textContent = summaryText;
+  };
+
+  const setupSummaryEvents = () => {
+    document.querySelectorAll('.summary-column div').forEach(div => {
+      const originalText = div.dataset.fullText || div.textContent.trim();
+      if (originalText.length > maxLengthDisplay) {
+        div.textContent = originalText.slice(0, maxLengthDisplay) + "...";
+        div.dataset.fullText = originalText;
+      }
+
+      div.addEventListener('click', function () {
+        if (this.classList.contains('expanded')) {
+          this.classList.remove('expanded');
+          this.style.width = ''; // Reset chiều rộng về mặc định khi thu gọn
+          this.textContent = this.dataset.fullText.slice(0, maxLengthDisplay) + "...";
+        } else {
+          this.classList.add('expanded');
+          this.style.width = '100%'; // Mở rộng chiều rộng khi mở
+          this.textContent = this.dataset.fullText;
+        }
+      });
+    });
   };
 
   const enforceDropdownWidth = () => {
@@ -206,18 +230,20 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('goBtn').disabled = false;
   });
 
-  document.getElementById('goBtn').addEventListener('click', async function() {
+  document.getElementById('goBtn').addEventListener('click', async function () {
     const selectedClass = document.getElementById('classSelect').value;
     await updateTableData(selectedClass);
     populateDropdowns();
   });
 
-  document.getElementById('saveBtn').addEventListener('click', function() {
+  document.getElementById('saveBtn').addEventListener('click', function () {
     // Save data is handled dynamically upon dropdown changes
     alert("Data saved successfully!");
   });
 
-  document.getElementById('createNewBtn').addEventListener('click', function() {
+  document.getElementById('createNewBtn').addEventListener('click', function () {
     resetAll();
   });
+
+  setupSummaryEvents();
 });

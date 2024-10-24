@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,43 +8,43 @@
   <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.sheetjs.com/xlsx-0.19.1/package/dist/xlsx.full.min.js"></script>
 </head>
+
 <body>
   <div class="container">
     <h2>Student Comment System</h2>
-    <form> 
+    <form>
       <div class="form-group">
-        <label for="gradeSelect">Select Grade:</label>
+        <label for="gradeSelect">Chọn khối:</label>
         <select id="gradeSelect">
-          <option value=""></option>
-          <option value="Sheet1">Grade 1</option>
-          <option value="Sheet2">Grade 2</option>
-          <option value="Sheet3">Grade 3</option>
-          <option value="Sheet4">Grade 4</option>
-          <option value="Sheet5">Grade 5</option>
+          <option value="select  level"></option>
+          <option value="Sheet1">Khối 1</option>
+          <option value="Sheet2">Khối 2</option>
+          <option value="Sheet3">Khối 3</option>
+          <option value="Sheet4">Khối 4</option>
+          <option value="Sheet5">Khối 5</option>
         </select>
 
-        <label for="classSelect">Select Class:</label>
+        <label for="classSelect">Chọn lớp:</label>
         <select id="classSelect">
-          <option value="" disabled selected>Select a grade first</option>
+          <option value="sâs" disabled selected>Chọn khối trước</option>
         </select>
 
-        <label for="subjectSelect">Select Subject:</label>
+        <label for="subjectSelect">Chọn môn học:</label>
         <select id="subjectSelect">
-          <option value=""></option>
-          <option value="ICTSheet">ICT</option>
-          <option value="MathSheet">Math</option>
-          <option value="ScienceSheet">Science</option>
-          <option value="EnglishSheet">English</option>
+          <option value="Select a subject"></option>
+          <option value="ICTSheet">CNTT</option>
+          <option value="MathSheet">Toán</option>
+          <option value="ScienceSheet">Khoa học</option>
+          <option value="EnglishSheet">Tiếng Anh</option>
         </select>
 
-        <button type="button" id="goBtn" disabled>Go</button>
+        <button type="button" id="goBtn" disabled>Chọn</button>
       </div>
 
-      
       <div class="buttons-group">
-        <button type="button" id="saveBtn">Save</button>
-        <button type="button" id="downloadBtn">Download</button>
-        <button type="button" id="createNewBtn">Create New</button>
+        <button type="button" id="saveBtn">Lưu</button>
+        <button type="button" id="downloadBtn">Tải về</button>
+        <button type="button" id="createNewBtn">Tạo mới</button>
       </div>
     </form>
 
@@ -51,22 +52,22 @@
       <table id="commentTable" border="1">
         <thead>
           <tr>
-            <th>No</th>
-            <th>Student Code</th>
-            <th>Student Name</th>
-            <th>Firstname</th>
-            <th>Gender</th>
-            <th>Participation (15)</th>
-            <th>Classwork (15)</th>
-            <th>Assessment 1 (100)</th>
-            <th>Assessment 2 (100)</th>
-            <th>Final Exam (100)</th>
-            <th>Introduction</th>
-            <th>Behavior</th>
-            <th>Classwork</th>
-            <th>Participation</th>
-            <th>Improvements</th>
-            <th>Summary</th>
+            <th>STT</th>
+            <th>Mã Học Sinh</th>
+            <th>Tên Học Sinh</th>
+            <th>Tên</th>
+            <th>Giới Tính</th>
+            <th>Tham Gia (15)</th>
+            <th>Làm Bài (15)</th>
+            <th>Đánh Giá 1 (100)</th>
+            <th>Đánh Giá 2 (100)</th>
+            <th>Cuối Kỳ (100)</th>
+            <th>Giới Thiệu</th>
+            <th>Hành Vi</th>
+            <th>Làm Bài</th>
+            <th>Tham Gia</th>
+            <th>Cải Thiện</th>
+            <th>Tổng Kết</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -74,6 +75,8 @@
     </div>
   </div>
 
+  <div class="loading-spinner" id="loadingSpinner"></div>
   <script src="script.js"></script>
 </body>
+
 </html>
