@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,10 +8,11 @@
   <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.sheetjs.com/xlsx-0.19.1/package/dist/xlsx.full.min.js"></script>
 </head>
+
 <body>
   <div class="container">
     <h2>Student Comment System</h2>
-    <form> 
+    <form>
       <div class="form-group">
         <label for="gradeSelect">Select Grade:</label>
         <select id="gradeSelect">
@@ -27,19 +29,19 @@
           <option value="" disabled selected>Select a grade first</option>
         </select>
 
-        <label for="subjectSelect">Select Subject:</label>
+        <!-- <label for="subjectSelect">Select Subject:</label>
         <select id="subjectSelect">
           <option value=""></option>
           <option value="ICTSheet">ICT</option>
           <option value="MathSheet">Math</option>
           <option value="ScienceSheet">Science</option>
           <option value="EnglishSheet">English</option>
-        </select>
+        </select> -->
 
         <button type="button" id="goBtn" disabled>Go</button>
       </div>
 
-      
+
       <div class="buttons-group">
         <button type="button" id="saveBtn">Save</button>
         <button type="button" id="downloadBtn">Download</button>
@@ -76,4 +78,5 @@
 
   <script src="script.js"></script>
 </body>
+
 </html>
