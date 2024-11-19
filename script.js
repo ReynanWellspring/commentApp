@@ -272,27 +272,84 @@ document.addEventListener('DOMContentLoaded', function () {
   };
 
   // Save selected data to localStorage
-  const saveData = (rowIndex, columnIndex, value) => {
-    let savedData = JSON.parse(localStorage.getItem('savedComments')) || {};
-    if (!savedData[rowIndex]) {
-      savedData[rowIndex] = {};
-    }
-    savedData[rowIndex][columnIndex] = value;
+ // const saveData = (rowIndex, columnIndex, value) => {
+   // let savedData = JSON.parse(localStorage.getItem('savedComments')) || {};
+   // if (!savedData[rowIndex]) {
+     // savedData[rowIndex] = {};
+   // }
+   // savedData[rowIndex][columnIndex] = value;
+    //localStorage.setItem('savedComments', JSON.stringify(savedData));
+  //};
+
+  document.getElementById('saveBtn').addEventListener('click', function () {
+    const tableBody = document.getElementById('commentTable').querySelector('tbody');
+    const savedData = {}; // Object to store all rows' data
+  
+    // Iterate over all rows in the table
+    const rows = tableBody.querySelectorAll('tr');
+    rows.forEach((row, rowIndex) => {
+      const rowData = {};
+  
+      // Save dropdown selections
+      row.querySelectorAll('select').forEach((select) => {
+        const category = select.dataset.category;
+        rowData[category] = select.value || ''; // Save the selected value
+      });
+  
+      // Save the summary text
+      const summaryCell = row.querySelector('.summary-column div');
+      rowData['summary'] = summaryCell ? summaryCell.textContent.trim() : '';
+  
+      // Save row data by index
+      savedData[rowIndex] = rowData;
+    });
+  
+    // Save the entire table data to localStorage
     localStorage.setItem('savedComments', JSON.stringify(savedData));
+  
+    // Notify the user of successful save
+    alert("All data has been saved successfully!");
+  });
+
+  const restoreSavedData = () => {
+    const savedData = JSON.parse(localStorage.getItem('savedComments'));
+    if (savedData) {
+      const tableBody = document.getElementById('commentTable').querySelector('tbody');
+      Object.keys(savedData).forEach(rowIndex => {
+        const row = tableBody.rows[rowIndex];
+        if (row) {
+          const rowData = savedData[rowIndex];
+  
+          // Restore dropdown selections
+          row.querySelectorAll('select').forEach((select) => {
+            const category = select.dataset.category;
+            if (rowData[category]) {
+              select.value = rowData[category];
+            }
+          });
+  
+          // Restore summary text
+          const summaryDiv = row.querySelector('.summary-column div');
+          if (summaryDiv && rowData['summary']) {
+            summaryDiv.textContent = rowData['summary'];
+          }
+        }
+      });
+    }
   };
 
   // Restore saved data from localStorage
-  const restoreSavedData = () => {
-    let savedData = JSON.parse(localStorage.getItem('savedComments')) || {};
-    for (let rowIndex in savedData) {
-      for (let columnIndex in savedData[rowIndex]) {
-        let select = document.querySelector(`select[data-row-index="${rowIndex}"][data-column-index="${columnIndex}"]`);
-        if (select) {
-          select.value = savedData[rowIndex][columnIndex];
-        }
-      }
-    }
-  };
+  //const restoreSavedData = () => {
+    //let savedData = JSON.parse(localStorage.getItem('savedComments')) || {};
+    //for (let rowIndex in savedData) {
+      //for (let columnIndex in savedData[rowIndex]) {
+        //let select = document.querySelector(`select[data-row-index="${rowIndex}"][data-column-index="${columnIndex}"]`);
+        //if (select) {
+         // select.value = savedData[rowIndex][columnIndex];
+       // }
+      //}
+   // }
+  //};
 
   // Reset the table and clear saved data
   const resetAll = () => {
