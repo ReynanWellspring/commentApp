@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const introduction = selectedComments[0].value;
     const behavior = `${currentPronoun.subject} ${selectedComments[1].value.toLowerCase()}`;
-    const classwork = `${currentPronoun.possessive.charAt(0).toUpperCase() + currentPronoun.possessive.slice(1)} classwork ${selectedComments[2].value.toLowerCase()}`;
+    const classwork = `${currentPronoun.subject.charAt(0).toUpperCase() + currentPronoun.subject.slice(1)} ${selectedComments[2].value.toLowerCase()}`;
     const participation = `${currentPronoun.subject} ${selectedComments[3].value.toLowerCase()}`;
     const improvements = `${currentPronoun.subject} ${selectedComments[4].value.toLowerCase()}`;
 
